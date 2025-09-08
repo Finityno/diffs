@@ -1,8 +1,8 @@
 import {
   codeToHtml as shikiCodeToHtml,
   createHighlighter,
-  createJavaScriptRegexEngine,
-  // createOnigurumaEngine,
+  createOnigurumaEngine,
+  loadWasm,
   type GrammarState,
 } from 'shiki';
 import type { Root, Element, RootContent, Nodes } from 'hast';
@@ -19,10 +19,11 @@ interface RenderToHTMLProps {
 
 export async function createChunkedRenderer() {
   const start = Date.now();
+  await loadWasm(import('shiki/wasm'));
   const shiki = await createHighlighter({
     themes: ['min-light', 'min-dark'],
     langs: ['text', 'yaml', 'javascript', 'typescript'],
-    engine: createJavaScriptRegexEngine(),
+    engine: createOnigurumaEngine(),
   });
   console.log('ZZZZZZ - creating highlighter', Date.now() - start);
   let lastHast: Root | null = null;
