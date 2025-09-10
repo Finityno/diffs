@@ -1,6 +1,6 @@
 import './style.css';
 import testContent from './tests/example.txt?raw';
-import { createFakeContentStream } from './fakeContentStream';
+import { createFakeContentStream } from './utils/fakeContentStream';
 import { CodeRenderer } from './CodeRenderer';
 
 async function renderChunk(event: MouseEvent) {
