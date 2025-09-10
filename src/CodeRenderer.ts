@@ -17,6 +17,7 @@ interface CodeTokenOptionsBase {
   lang: BundledLanguage;
   defaultColor?: StringLiteralUnion<'light' | 'dark'> | 'light-dark()' | false;
   preferJSHighlighter?: boolean;
+  startingLineIndex?: number;
 }
 
 interface CodeTokenOptionsSingleTheme extends CodeTokenOptionsBase {
@@ -43,6 +44,7 @@ export class CodeRenderer {
   constructor(stream: ReadableStream<string>, options: CodeRendererOptions) {
     this.stream = stream;
     this.options = options;
+    this.currentLineIndex = this.options.startingLineIndex ?? 1;
   }
 
   async setup(wrapper: HTMLElement) {
@@ -69,14 +71,20 @@ export class CodeRenderer {
       );
   }
 
-  currentLineIndex = 1;
-  currentLineElement: HTMLElement | undefined;
+  private queuedTokens: (ThemedToken | RecallToken)[] = [];
   handleWrite = async (token: ThemedToken | RecallToken) => {
-    this.queuedTokens.push(token);
+    // If we've recalled tokens we haven't rendered yet, we can just yeet them
+    // and never apply them
+    if ('recall' in token && this.queuedTokens.length >= token.recall) {
+      this.queuedTokens.length = this.queuedTokens.length - token.recall;
+    } else {
+      this.queuedTokens.push(token);
+    }
     queueRender(this.render);
   };
 
-  private queuedTokens: (ThemedToken | RecallToken)[] = [];
+  currentLineIndex: number;
+  currentLineElement: HTMLElement | undefined;
   render = () => {
     const isScrolledToBottom =
       this.pre.scrollTop + this.pre.clientHeight >= this.pre.scrollHeight - 1;
