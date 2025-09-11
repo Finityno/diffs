@@ -16,7 +16,7 @@ import { getSharedHighlighter } from './SharedHighlighter';
 interface CodeTokenOptionsBase {
   lang: BundledLanguage;
   defaultColor?: StringLiteralUnion<'light' | 'dark'> | 'light-dark()' | false;
-  preferJSHighlighter?: boolean;
+  preferWasmHighlighter?: boolean;
   startingLineIndex?: number;
 
   onPreRender?(instance: CodeRenderer): unknown;
@@ -153,7 +153,12 @@ export class CodeRenderer {
   }
 
   private getHighlighterOptions() {
-    const { lang, themes: _themes, theme, preferJSHighlighter } = this.options;
+    const {
+      lang,
+      themes: _themes,
+      theme,
+      preferWasmHighlighter,
+    } = this.options;
     const langs: BundledLanguage[] = [lang];
     const themes: BundledTheme[] = [];
     if (theme != null) {
@@ -162,6 +167,6 @@ export class CodeRenderer {
       themes.push(_themes.dark);
       themes.push(_themes.light);
     }
-    return { langs, themes, preferJSHighlighter };
+    return { langs, themes, preferWasmHighlighter };
   }
 }

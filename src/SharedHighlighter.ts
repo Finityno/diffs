@@ -18,26 +18,29 @@ const loadedLanguages = new Set<BundledLanguage>();
 interface HighlighterOptions {
   themes: BundledTheme[];
   langs: BundledLanguage[];
-  preferJSHighlighter?: boolean;
+  preferWasmHighlighter?: boolean;
 }
 
 export async function getSharedHighlighter({
   themes,
   langs,
-  preferJSHighlighter = false,
+  preferWasmHighlighter = false,
 }: HighlighterOptions) {
   if (highlighter == null) {
     // NOTE(amadeus): We should probably build in some logic for rejection
     // handling...
     highlighter = new Promise((resolve) => {
-      (preferJSHighlighter ? Promise.resolve() : loadWasm(import('shiki/wasm')))
+      (preferWasmHighlighter
+        ? loadWasm(import('shiki/wasm'))
+        : Promise.resolve()
+      )
         .then(() => {
           return createHighlighter({
             themes,
             langs,
-            engine: preferJSHighlighter
-              ? createJavaScriptRegexEngine()
-              : createOnigurumaEngine(),
+            engine: preferWasmHighlighter
+              ? createOnigurumaEngine()
+              : createJavaScriptRegexEngine(),
           });
         })
         .then((instance) => {
