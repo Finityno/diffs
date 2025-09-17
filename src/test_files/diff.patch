@@ -47,7 +47,6 @@ index 0000000..91440ae
 +    <script type="module" src="/src/main.tsx"></script>
 +  </body>
 +</html>
-+
 diff --git a/index.html b/index.html
 index 4ad10b6..48f4e47 100644
 --- a/index.html
@@ -1249,7 +1248,6 @@ index 0000000..070cc0d
 +    }
 +  ]
 +}
-+
 diff --git a/vite.config.ts b/vite.config.ts
 new file mode 100644
 index 0000000..ff38bc0
