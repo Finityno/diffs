@@ -1,3 +1,4 @@
+import './style.css';
 export * from './CodeRenderer';
 export * from './SharedHighlighter';
 export * from './UnversialRenderer';
