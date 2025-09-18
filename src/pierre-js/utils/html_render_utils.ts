@@ -43,7 +43,8 @@ export function createRow(line: number) {
 interface SetupWrapperBase {
   pre: HTMLPreElement;
   highlighter: HighlighterGeneric<BundledLanguage, BundledTheme>;
-  splitView: boolean;
+  split?: boolean;
+  wrap?: boolean;
 }
 
 interface SetupWrapperTheme extends ThemeVariant, SetupWrapperBase {}
@@ -84,7 +85,14 @@ export function createHunkSeparator() {
 }
 
 function setWrapperProps(
-  { pre, highlighter, theme, themes, splitView }: SetupWrapperNodesProps,
+  {
+    pre,
+    highlighter,
+    theme,
+    themes,
+    split = false,
+    wrap = false,
+  }: SetupWrapperNodesProps,
   prefix?: string
 ) {
   let styles = '';
@@ -92,8 +100,8 @@ function setWrapperProps(
     const themeData = highlighter.getTheme(theme);
     styles += `color:${themeData.fg};`;
     styles += `background-color:${themeData.bg};`;
-    styles += `${formatCSSVariablePrefix(prefix)}-fg:${themeData.fg};`;
-    styles += `${formatCSSVariablePrefix(prefix)}-bg:${themeData.bg};`;
+    styles += `${formatCSSVariablePrefix(prefix)}fg:${themeData.fg};`;
+    styles += `${formatCSSVariablePrefix(prefix)}bg:${themeData.bg};`;
     pre.dataset.theme = themeData.type;
   } else {
     let themeData = highlighter.getTheme(themes.dark);
@@ -105,7 +113,8 @@ function setWrapperProps(
     styles += `${formatCSSVariablePrefix(prefix)}light-bg:${themeData.bg};`;
     pre.dataset.themed = '';
   }
-  pre.dataset.type = splitView ? 'split' : 'file';
+  pre.dataset.type = split ? 'split' : 'file';
+  pre.dataset.overflow = wrap ? 'wrap' : 'scroll';
   pre.style = styles;
 }
 

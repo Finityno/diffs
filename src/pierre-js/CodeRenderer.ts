@@ -137,12 +137,11 @@ export class CodeRenderer {
     highlighter: HighlighterGeneric<BundledLanguage, BundledTheme>
   ) {
     const { themes, theme } = this.options;
-    const splitView =
-      diff.type === 'changed' || diff.type === 'renamed-changed';
+    const split = diff.type === 'changed' || diff.type === 'renamed-changed';
     const pre = setupPreNode(
       themes != null
-        ? { pre: wrapper, themes, highlighter, splitView }
-        : { pre: wrapper, theme, highlighter, splitView }
+        ? { pre: wrapper, themes, highlighter, split }
+        : { pre: wrapper, theme, highlighter, split }
     );
 
     this.pre = pre;
@@ -308,8 +307,8 @@ export class CodeRenderer {
     const { themes, theme } = this.options;
     const pre = setupPreNode(
       themes != null
-        ? { pre: wrapper, themes, highlighter, splitView: false }
-        : { pre: wrapper, theme, highlighter, splitView: false }
+        ? { pre: wrapper, themes, highlighter }
+        : { pre: wrapper, theme, highlighter }
     );
 
     this.pre = pre;
