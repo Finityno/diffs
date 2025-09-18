@@ -12,6 +12,7 @@ import {
   isHighlighterNull,
   preloadHighlighter,
   parsePatchContent,
+  type ParsedPatch,
 } from 'pierrejs';
 
 function startStreaming(event: MouseEvent) {
@@ -28,40 +29,56 @@ function startStreaming(event: MouseEvent) {
   }
 }
 
+let parsedPatch: ParsedPatch | undefined;
+function handlePreloadDiff() {
+  if (parsedPatch != null || !isHighlighterNull()) return;
+  parsedPatch = parsePatchContent(DIFF_CONTENT);
+  const langs = new Set<BundledLanguage>();
+  for (const file of parsedPatch.files) {
+    const lang = getFiletypeFromMetadata(file);
+    if (lang != null) {
+      langs.add(lang);
+    }
+  }
+  preloadHighlighter({
+    langs: Array.from(langs),
+    themes: ['tokyo-night', 'solarized-light'],
+  });
+}
+
 function renderDiff() {
   const container = document.getElementById('content');
   if (container == null) return;
   container.dataset.diff = '';
-  const parsed = parsePatchContent(DIFF_CONTENT);
-  console.log('ZZZZZ - parsed', parsed);
-  for (const file of parsed.files) {
+  parsedPatch = parsedPatch ?? parsePatchContent(DIFF_CONTENT);
+  for (const file of parsedPatch.files) {
     const pre = document.createElement('pre');
+    pre.dataset.theme = 'dark';
     container.appendChild(pre);
     const instance = new CodeRenderer({
       lang: getFiletypeFromMetadata(file),
-      theme: 'tokyo-night',
+      themes: { dark: 'tokyo-night', light: 'solarized-light' },
     });
     instance.setup(file, pre);
   }
 }
 
 function handlePreload() {
-  if (isHighlighterNull()) {
-    const langs: BundledLanguage[] = [];
-    const themes: BundledTheme[] = [];
-    for (const item of CodeConfigs) {
-      if ('lang' in item.options) {
-        langs.push(item.options.lang);
-      }
-      if ('themes' in item.options) {
-        themes.push(item.options.themes.dark);
-        themes.push(item.options.themes.light);
-      } else if ('theme' in item.options) {
-        themes.push(item.options.theme);
-      }
+  if (!isHighlighterNull()) return;
+  const langs: BundledLanguage[] = [];
+  const themes: BundledTheme[] = [];
+  for (const item of CodeConfigs) {
+    if ('lang' in item.options) {
+      langs.push(item.options.lang);
     }
-    preloadHighlighter({ langs, themes });
+    if ('themes' in item.options) {
+      themes.push(item.options.themes.dark);
+      themes.push(item.options.themes.light);
+    } else if ('theme' in item.options) {
+      themes.push(item.options.theme);
+    }
   }
+  preloadHighlighter({ langs, themes });
 }
 
 document.getElementById('toggle-theme')?.addEventListener('click', toggleTheme);
@@ -75,6 +92,7 @@ if (streamCode != null) {
 const loadDiff = document.getElementById('load-diff');
 if (loadDiff != null) {
   loadDiff.addEventListener('click', renderDiff);
+  loadDiff.addEventListener('mouseenter', handlePreloadDiff);
 }
 
 const wrapCheckbox = document.getElementById('wrap-lines');

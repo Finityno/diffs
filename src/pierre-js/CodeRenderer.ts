@@ -505,14 +505,7 @@ function createTransformerWithState(): {
   return {
     state,
     transformer: {
-      code(code) {
-        code.properties['data-code'] = '';
-        return code;
-      },
       pre(pre) {
-        // FIXME(amadeus): We should probably not do this...
-        pre.properties['data-theme'] = 'dark';
-        delete pre.properties.class;
         // NOTE(amadeus): This kinda sucks -- basically we can't apply our
         // line node changes until AFTER decorations have been applied
         const code = findCodeElement(pre);

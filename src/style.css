@@ -207,8 +207,38 @@ code {
 [data-buffer] {
   grid-column: 1 / 3;
   user-select: none;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: color-mix(
+    in srgb,
+    var(--pjs-light-bg, var(--pjs-bg)) 97%,
+    black
+  );
   min-height: 1lh;
+}
+
+[data-theme='light'] [data-buffer] {
+  background-color: color-mix(
+    in srgb,
+    var(--pjs-light-bg, var(--pjs-bg)) 97%,
+    black
+  );
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-buffer] {
+    background-color: color-mix(
+      in srgb,
+      var(--pjs-dark-bg, var(--pjs-bg)) 97%,
+      white
+    );
+  }
+}
+
+[data-theme='dark'] [data-buffer] {
+  background-color: color-mix(
+    in srgb,
+    var(--pjs-dark-bg, var(--pjs-bg)) 97%,
+    white
+  );
 }
 
 [data-type='split'][data-overflow='wrap'] [data-deletions] [data-line],
