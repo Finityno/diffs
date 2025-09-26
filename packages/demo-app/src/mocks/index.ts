@@ -5,6 +5,7 @@ import { createHighlighterCleanup } from '../utils/createHighlighterCleanup';
 import { createScrollFixer } from '../utils/createScrollFixer';
 import diffContent2 from './diff2.patch?raw';
 import diffContent3 from './diff3.patch?raw';
+import diffContent4 from './diff4.patch?raw';
 import diffContent from './diff.patch?raw';
 import mdContent from './example_md.txt?raw';
 import tsContent from './example_ts.txt?raw';
@@ -50,6 +51,7 @@ export function toggleTheme() {
 export const DIFF_CONTENT = diffContent;
 export const DIFF_CONTENT_2 = diffContent2;
 export const DIFF_CONTENT_3 = diffContent3;
+export const DIFF_CONTENT_4 = diffContent4;
 
 export const DIFF_CONTENT_FORMATS: Record<string, BundledLanguage | undefined> =
   {
