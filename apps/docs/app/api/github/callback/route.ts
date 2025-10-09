@@ -54,8 +54,6 @@ export async function GET(request: NextRequest) {
       maxAge: 60 * 60 * 24 * 30,
     });
 
-    // Don't store installation_id - we'll fetch all installations dynamically
-
     return response;
   } catch (error) {
     console.error('OAuth error:', error);
