@@ -3,7 +3,9 @@ import { RootProvider } from 'fumadocs-ui/provider';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
-import '../styles/tokens.css';
+// import '../styles/tokens.css';
+
+import { Toaster } from '@/components/ui/sonner';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -39,6 +41,7 @@ export default function RootLayout({
       >
         <RootProvider>
           {children}
+          <Toaster />
           <div
             id="dark-mode-portal-container"
             className="dark"
