@@ -434,13 +434,9 @@ function PopoverConductor({
     initialStep = 'create';
   }
 
-  console.log('initialStep', initialStep, codeStorageRepo, connectionStatus);
-
   const [step, setStep] = useState<Step>(initialStep);
 
   useEffect(() => {
-    console.log('codeStorageRepo effect', codeStorageRepo);
-    console.log('connectionStatus effect', connectionStatus);
     if (codeStorageRepo != null) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setStep('manage');
