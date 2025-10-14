@@ -35,9 +35,10 @@ export function App() {
         if ('themes' in item.options) {
           themes.push(item.options.themes.dark);
           themes.push(item.options.themes.light);
-        } else if ('theme' in item.options) {
-          themes.push(item.options.theme);
         }
+        // else if ('theme' in item.options) {
+        //   themes.push(item.options.theme);
+        // }
       }
       void preloadHighlighter({ langs, themes });
     }

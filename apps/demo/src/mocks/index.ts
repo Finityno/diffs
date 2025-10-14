@@ -1,7 +1,6 @@
-import type { LineAnnotation } from '@pierre/diff-ui';
+import type { CodeRendererOptions, LineAnnotation } from '@pierre/diff-ui';
 
 import { createHighlighterCleanup } from '../utils/createHighlighterCleanup';
-import { createScrollFixer } from '../utils/createScrollFixer';
 import mdContent from './example_md.txt?raw';
 import tsContent from './example_ts.txt?raw';
 import fileNew from './fileNew.txt?raw';
@@ -15,22 +14,20 @@ export const CodeConfigs = [
     letterByLetter: false,
     options: {
       lang: 'tsx',
-      theme: 'tokyo-night',
+      themes: { dark: 'pierre-dark', light: 'pierre-light' },
       defaultColor: false,
-      ...createScrollFixer(),
       ...createHighlighterCleanup(),
-    } as const,
+    } satisfies CodeRendererOptions,
   },
   {
     content: mdContent,
     letterByLetter: true,
     options: {
       lang: 'markdown',
-      themes: { dark: 'solarized-dark', light: 'solarized-light' },
+      themes: { dark: 'pierre-dark', light: 'pierre-light' },
       defaultColor: false,
-      ...createScrollFixer(),
       ...createHighlighterCleanup(),
-    } as const,
+    } satisfies CodeRendererOptions,
   },
 ] as const;
 

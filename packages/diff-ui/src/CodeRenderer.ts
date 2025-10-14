@@ -10,6 +10,7 @@ import type {
   PJSHighlighter,
   PJSThemeNames,
   SupportedLanguages,
+  ThemeModes,
   ThemedToken,
   ThemesType,
 } from './types';
@@ -48,15 +49,36 @@ export type CodeRendererOptions =
   | CodeTokenOptionsMultiThemes;
 
 export class CodeRenderer {
-  highlighter: PJSHighlighter | undefined;
+  private highlighter: PJSHighlighter | undefined;
   options: CodeRendererOptions;
-  stream: ReadableStream<string> | undefined;
+  private stream: ReadableStream<string> | undefined;
+  private fileContainer: HTMLElement | undefined;
   pre: HTMLPreElement | undefined;
-  code: HTMLElement | undefined;
+  private code: HTMLElement | undefined;
 
   constructor(options: CodeRendererOptions) {
     this.options = options;
     this.currentLineIndex = this.options.startingLineIndex ?? 1;
+  }
+
+  setThemeMode(themeMode: ThemeModes) {
+    if ((this.options.themeMode ?? 'system') === themeMode) {
+      return;
+    }
+    this.options = { ...this.options, themeMode };
+
+    // Update pre element theme mode
+    if (this.pre != null) {
+      switch (themeMode) {
+        case 'system':
+          delete this.pre.dataset.themeMode;
+          break;
+        case 'light':
+        case 'dark':
+          this.pre.dataset.themeMode = themeMode;
+          break;
+      }
+    }
   }
 
   private async initializeHighlighter() {
@@ -64,8 +86,8 @@ export class CodeRenderer {
     return this.highlighter;
   }
 
-  private queuedSetupArgs: [ReadableStream<string>, HTMLPreElement] | undefined;
-  async setup(_source: ReadableStream<string>, _wrapper: HTMLPreElement) {
+  private queuedSetupArgs: [ReadableStream<string>, HTMLElement] | undefined;
+  async setup(_source: ReadableStream<string>, _wrapper: HTMLElement) {
     const isSettingUp = this.queuedSetupArgs != null;
     this.queuedSetupArgs = [_source, _wrapper];
     if (isSettingUp) {
@@ -82,7 +104,7 @@ export class CodeRenderer {
 
   private setupStream(
     stream: ReadableStream<string>,
-    wrapper: HTMLPreElement,
+    wrapper: HTMLElement,
     highlighter: PJSHighlighter
   ) {
     const {
@@ -91,8 +113,16 @@ export class CodeRenderer {
       overflow = 'scroll',
       themeMode = 'system',
     } = this.options;
+    const fileContainer = this.getOrCreateFileContainer();
+    if (fileContainer.parentElement == null) {
+      wrapper.appendChild(fileContainer);
+    }
+    this.pre ??= document.createElement('pre');
+    if (this.pre.parentElement == null) {
+      fileContainer.shadowRoot?.appendChild(this.pre);
+    }
     const pre = setWrapperProps({
-      pre: wrapper,
+      pre: this.pre,
       split: false,
       theme,
       themes,
@@ -214,5 +244,17 @@ export class CodeRenderer {
       themes.push(_themes.light);
     }
     return { langs, themes, preferWasmHighlighter };
+  }
+
+  private getOrCreateFileContainer(fileContainer?: HTMLElement) {
+    if (
+      (fileContainer != null && fileContainer === this.fileContainer) ||
+      (fileContainer == null && this.fileContainer != null)
+    ) {
+      return this.fileContainer;
+    }
+    this.fileContainer =
+      fileContainer ?? document.createElement('pjs-container');
+    return this.fileContainer;
   }
 }

@@ -35,6 +35,7 @@ async function loadPatchContent() {
   return loadingPatch;
 }
 
+const streamingInstances: CodeRenderer[] = [];
 function startStreaming() {
   const container = document.getElementById('wrapper');
   if (container == null) return;
@@ -45,10 +46,12 @@ function startStreaming() {
     streamCode.parentElement?.removeChild(streamCode);
   }
   for (const { content, letterByLetter, options } of CodeConfigs) {
-    const pre = document.createElement('pre');
-    container.appendChild(pre);
     const instance = new CodeRenderer(options);
-    void instance.setup(createFakeContentStream(content, letterByLetter), pre);
+    void instance.setup(
+      createFakeContentStream(content, letterByLetter),
+      container
+    );
+    streamingInstances.push(instance);
   }
 }
 
@@ -171,8 +174,6 @@ function handlePreload() {
     if ('themes' in item.options) {
       themes.push(item.options.themes.dark);
       themes.push(item.options.themes.light);
-    } else if ('theme' in item.options) {
-      themes.push(item.options.theme);
     }
   }
   void preloadHighlighter({ langs, themes });
@@ -314,6 +315,12 @@ function toggleTheme() {
     pageTheme === 'dark' ? 'light' : 'dark';
 
   for (const instance of diffInstances) {
+    const themeSetting = instance.options.themeMode ?? 'system';
+    const currentMode = themeSetting === 'system' ? pageTheme : themeSetting;
+    instance.setThemeMode(currentMode === 'light' ? 'dark' : 'light');
+  }
+
+  for (const instance of streamingInstances) {
     const themeSetting = instance.options.themeMode ?? 'system';
     const currentMode = themeSetting === 'system' ? pageTheme : themeSetting;
     instance.setThemeMode(currentMode === 'light' ? 'dark' : 'light');
