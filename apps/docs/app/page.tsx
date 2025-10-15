@@ -167,7 +167,8 @@ const Hero = () => {
         Shiki, insanely customizable, and packed with the features you need.
         Made with love by{' '}
         <Link
-          href="https://pierre.co"
+          target="_blank"
+          href="https://pierre.computer"
           className="underline hover:text-foreground transition-colors"
         >
           The Pierre Computer Company
