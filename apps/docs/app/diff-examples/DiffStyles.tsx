@@ -1,10 +1,29 @@
 'use client';
 
 import { FileDiff } from '@/components/diff-ui/FileDiff';
-import { IconParagraph, IconWordWrap } from '@/components/icons';
+import {
+  IconCheckLg,
+  IconCodeStyleBars,
+  IconCodeStyleBg,
+  IconCodeStyleInline,
+  IconParagraph,
+  IconSymbolDiffstat,
+  IconWordWrap,
+} from '@/components/icons';
+import { Button } from '@/components/ui/button';
 import { ButtonGroup, ButtonGroupItem } from '@/components/ui/button-group';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Switch } from '@/components/ui/switch';
 import type { FileContents } from '@pierre/diff-ui';
+import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
+
+import { FeatureHeader } from './FeatureHeader';
 
 const OLD_FILE: FileContents = {
   name: 'file.tsx',
@@ -41,6 +60,29 @@ export default function Home() {
 `,
 };
 
+const diffStyleOptions = [
+  {
+    value: 'word-alt',
+    label: 'Word-Alt',
+    description: 'Highlight entire words with enhanced algorithm',
+  },
+  {
+    value: 'word',
+    label: 'Word',
+    description: 'Highlight changed words within lines',
+  },
+  {
+    value: 'char',
+    label: 'Character',
+    description: 'Highlight individual character changes',
+  },
+  {
+    value: 'none',
+    label: 'None',
+    description: 'Show line-level changes only',
+  },
+] as const;
+
 export function DiffStyles() {
   const [diffIndicators, setDiffStyle] = useState<'classic' | 'bars' | 'none'>(
     'bars'
@@ -52,18 +94,13 @@ export function DiffStyles() {
   const [overflow, setOverflow] = useState<'wrap' | 'scroll'>('wrap');
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="space-y-4">
-        <h3 className="text-2xl font-semibold">
-          Choose how changes are styled
-        </h3>
-        <p className="text-sm text-muted-foreground">
-          Your diffs, your choice. Render changed lines with classic diff
-          indicators (+/–), full-width background colors, or vertical bars. You
-          can even highlight inline changes—character or word based—and toggle
-          line wrapping, hide numbers, and more.
-        </p>
-        <div className="flex flex-col md:flex-row gap-3">
+        <FeatureHeader
+          title="Choose how changes are styled"
+          description="Your diffs, your choice. Render changed lines with classic diff indicators (+/–), full-width background colors, or vertical bars. You can even highlight inline changes—character or word based—and toggle line wrapping, hide numbers, and more."
+        />
+        <div className="flex flex-col sm:flex-row flex-wrap md:items-center gap-3">
           <ButtonGroup
             value={diffIndicators}
             onValueChange={(value) =>
@@ -71,53 +108,104 @@ export function DiffStyles() {
             }
           >
             {['bars', 'classic', 'none'].map((value) => (
-              <ButtonGroupItem key={value} value={value}>
-                {value}
-              </ButtonGroupItem>
-            ))}
-          </ButtonGroup>
-          <ButtonGroup
-            value={disableBackground ? 'disable' : 'enable'}
-            onValueChange={(value) => {
-              if (value === 'disable') {
-                setDisableBackground(true);
-              } else {
-                setDisableBackground(false);
-              }
-            }}
-          >
-            {['disable', 'enable'].map((value) => (
-              <ButtonGroupItem key={value} value={value}>
-                {value === 'disable' ? 'Disable BG' : 'Enable BG'}
-              </ButtonGroupItem>
-            ))}
-          </ButtonGroup>
-          <ButtonGroup
-            value={lineDiffStyle}
-            onValueChange={(value) =>
-              setLineDiffStyle(value as 'word-alt' | 'word' | 'char' | 'none')
-            }
-          >
-            {['word', 'word-alt', 'char', 'none'].map((value) => (
-              <ButtonGroupItem key={value} value={value}>
+              <ButtonGroupItem
+                key={value}
+                value={value}
+                className="capitalize flex-1"
+              >
+                {value === 'bars' ? (
+                  <IconCodeStyleBars />
+                ) : value === 'classic' ? (
+                  <IconSymbolDiffstat />
+                ) : (
+                  <IconParagraph />
+                )}
                 {value}
               </ButtonGroupItem>
             ))}
           </ButtonGroup>
 
-          <ButtonGroup
-            value={overflow}
-            onValueChange={(value) => setOverflow(value as 'wrap' | 'scroll')}
-          >
-            <ButtonGroupItem value="wrap">
-              <IconWordWrap />
-              Wrap
-            </ButtonGroupItem>
-            <ButtonGroupItem value="scroll">
-              <IconParagraph />
-              No wrap
-            </ButtonGroupItem>
-          </ButtonGroup>
+          <div className="p-[2px] rounded-lg bg-secondary">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="justify-start w-full md:w-auto"
+                >
+                  <IconCodeStyleInline />
+                  {}
+                  {diffStyleOptions.find((opt) => opt.value === lineDiffStyle)
+                    ?.label ?? lineDiffStyle}
+                  <ChevronDown className="text-muted-foreground ml-auto" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-82">
+                {diffStyleOptions.map((option) => (
+                  <DropdownMenuItem
+                    key={option.value}
+                    onClick={() => setLineDiffStyle(option.value)}
+                    className="flex items-start py-2 gap-2"
+                  >
+                    {lineDiffStyle === option.value ? (
+                      <IconCheckLg className="mt-[1px]" />
+                    ) : (
+                      <div className="w-4 h-4" />
+                    )}
+                    <div className="flex flex-col w-full items-start">
+                      <span className="font-medium">{option.label}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {option.description}
+                      </span>
+                    </div>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
+          <div className="p-[2px] rounded-lg bg-secondary gridstack">
+            <Button
+              variant="outline"
+              className="justify-between w-full md:w-auto gap-3 pl-3 pr-11"
+              onClick={() => setDisableBackground(!disableBackground)}
+            >
+              <div className="flex items-center gap-2">
+                <IconCodeStyleBg />
+                Backgrounds
+              </div>
+            </Button>
+            <Switch
+              checked={!disableBackground}
+              onCheckedChange={(checked: boolean) =>
+                setDisableBackground(!checked)
+              }
+              onClick={(e) => e.stopPropagation()}
+              className="justify-self-end place-self-center mr-3 pointer-events-none"
+            />
+          </div>
+
+          <div className="p-[2px] rounded-lg bg-secondary gridstack ">
+            <Button
+              variant="outline"
+              className="justify-between w-full md:w-auto gap-3 pl-3 pr-11"
+              onClick={() =>
+                setOverflow(overflow === 'wrap' ? 'scroll' : 'wrap')
+              }
+            >
+              <div className="flex items-center gap-2">
+                <IconWordWrap />
+                Wrapping
+              </div>
+            </Button>
+            <Switch
+              checked={overflow === 'wrap'}
+              onCheckedChange={(checked: boolean) =>
+                setOverflow(checked ? 'wrap' : 'scroll')
+              }
+              onClick={(e) => e.stopPropagation()}
+              className="justify-self-end place-self-center mr-3 pointer-events-none"
+            />
+          </div>
         </div>
       </div>
       <FileDiff

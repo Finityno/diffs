@@ -2,6 +2,7 @@
 
 import { FileDiff } from '@/components/diff-ui/FileDiff';
 import {
+  IconCheck,
   IconColorAuto,
   IconColorDark,
   IconColorLight,
@@ -17,6 +18,8 @@ import {
 import { type FileContents, preloadHighlighter } from '@pierre/diff-ui';
 import { ChevronDown } from 'lucide-react';
 import { useEffect, useState } from 'react';
+
+import { FeatureHeader } from './FeatureHeader';
 
 const OLD_FILE: FileContents = {
   name: 'file.tsx',
@@ -144,68 +147,76 @@ export function ShikiThemes() {
   >('system');
 
   return (
-    <div className="space-y-4">
-      <h3 className="text-2xl font-semibold">Adapts to any Shiki theme</h3>
-      <p className="text-sm text-muted-foreground">
-        Precision Diffs are built with Shiki for syntax highlighting and general
-        theming. Our components automatically adapt to blend in with your theme
-        selection, including across color modes.
-      </p>
-      <div className="flex flex-col md:flex-row gap-3">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              className="justify-start w-full md:w-auto"
-            >
-              <IconColorLight />
-              {selectedLightTheme}
-              <ChevronDown className="ml-auto h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            {LIGHT_THEMES.map((theme) => (
-              <DropdownMenuItem
-                key={theme}
-                onClick={() => setSelectedLightTheme(theme)}
-                className={
-                  selectedLightTheme === theme ? 'bg-accent' : undefined
-                }
+    <div className="space-y-5">
+      <FeatureHeader
+        title="Adapts to any Shiki theme"
+        description="Precision Diffs are built with Shiki for syntax highlighting and general theming. Our components automatically adapt to blend in with your theme selection, including across color modes."
+      />
+      <div className="flex flex-col sm:flex-row flex-wrap md:items-center gap-3">
+        <div className="p-[2px] rounded-lg bg-secondary">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="justify-start w-full md:w-auto"
               >
-                {theme}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+                <IconColorLight />
+                {selectedLightTheme}
+                <ChevronDown className="ml-auto h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              {LIGHT_THEMES.map((theme) => (
+                <DropdownMenuItem
+                  key={theme}
+                  onClick={() => setSelectedLightTheme(theme)}
+                  className={
+                    selectedLightTheme === theme ? 'bg-accent' : undefined
+                  }
+                >
+                  {theme}
+                  {selectedLightTheme === theme && (
+                    <IconCheck className="ml-auto" />
+                  )}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              className="justify-start w-full md:w-auto"
-            >
-              <IconColorDark />
-              {selectedDarkTheme}
-              <ChevronDown className="ml-auto h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="start"
-            className="overflow-auto max-h-[550px]"
-          >
-            {DARK_THEMES.map((theme) => (
-              <DropdownMenuItem
-                key={theme}
-                onClick={() => setSelectedDarkTheme(theme)}
-                className={
-                  selectedDarkTheme === theme ? 'bg-accent' : undefined
-                }
+        <div className="p-[2px] rounded-lg bg-secondary">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="justify-start w-full md:w-auto"
               >
-                {theme}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+                <IconColorDark />
+                {selectedDarkTheme}
+                <ChevronDown className="ml-auto h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="start"
+              className="overflow-auto max-h-[550px]"
+            >
+              {DARK_THEMES.map((theme) => (
+                <DropdownMenuItem
+                  key={theme}
+                  onClick={() => setSelectedDarkTheme(theme)}
+                  className={
+                    selectedDarkTheme === theme ? 'bg-accent' : undefined
+                  }
+                >
+                  {theme}
+                  {selectedDarkTheme === theme && (
+                    <IconCheck className="ml-auto" />
+                  )}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
 
         <ButtonGroup
           value={selectedColorMode}
@@ -213,15 +224,15 @@ export function ShikiThemes() {
             setSelectedColorMode(value as 'system' | 'light' | 'dark')
           }
         >
-          <ButtonGroupItem value="system">
+          <ButtonGroupItem value="system" className="flex-1">
             <IconColorAuto />
             Auto
           </ButtonGroupItem>
-          <ButtonGroupItem value="light">
+          <ButtonGroupItem value="light" className="flex-1">
             <IconColorLight />
             Light
           </ButtonGroupItem>
-          <ButtonGroupItem value="dark">
+          <ButtonGroupItem value="dark" className="flex-1">
             <IconColorDark />
             Dark
           </ButtonGroupItem>

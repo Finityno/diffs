@@ -9,6 +9,8 @@ import {
 } from '@/components/ui/tooltip';
 import { useState } from 'react';
 
+import { FeatureHeader } from './FeatureHeader';
+
 interface CodeBlockProps {
   code: string;
   language?: string;
@@ -76,17 +78,12 @@ export function PrebuiltReact() {
 } from './@pierrejs/precision-diffs/index.js';`;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="space-y-4">
-        <h3 className="text-2xl font-semibold">
-          Pre-built React and JavaScript components
-        </h3>
-        <p className="text-sm text-muted-foreground">
-          No two codebases are alike, so we give you the freedom to implement
-          Precision Diffs however you like. Components are logically
-          separated—file wrapper, header, hunk, and more—and are all available
-          in React or JavaScript versions.
-        </p>
+        <FeatureHeader
+          title="Pre-built React and JavaScript components"
+          description="No two codebases are alike, so we give you the freedom to implement Precision Diffs however you like. Components are logically separated—file wrapper, header, hunk, and more—and are all available in React or JavaScript versions."
+        />
         <div className="grid md:grid-cols-2 gap-4">
           <CodeBlock code={reactCode} language="React" />
           <CodeBlock code={jsCode} language="JavaScript" />

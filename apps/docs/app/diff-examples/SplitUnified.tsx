@@ -6,6 +6,8 @@ import { ButtonGroup, ButtonGroupItem } from '@/components/ui/button-group';
 import type { FileContents } from '@pierre/diff-ui';
 import { useState } from 'react';
 
+import { FeatureHeader } from './FeatureHeader';
+
 const OLD_FILE: FileContents = {
   name: 'file.tsx',
   contents: `import * as 'react';
@@ -44,12 +46,11 @@ export default function Home() {
 export function SplitUnified() {
   const [diffStyle, setDiffStyle] = useState<'split' | 'unified'>('split');
   return (
-    <div className="space-y-4">
-      <h3 className="text-2xl font-semibold">Diff styles</h3>
-      <p className="text-muted-foreground">
-        Choose from stacked (unified) or split (side-by-side). Both use CSS Grid
-        under the hood, meaning fewer DOM nodes and fast rendering.
-      </p>
+    <div className="space-y-5">
+      <FeatureHeader
+        title="Diff layout styles"
+        description="Choose from stacked (unified) or split (side-by-side). Both use CSS Grid under the hood, meaning fewer DOM nodes and faster rendering."
+      />
       <ButtonGroup
         value={diffStyle}
         onValueChange={(value) => setDiffStyle(value as 'split' | 'unified')}
@@ -63,6 +64,7 @@ export function SplitUnified() {
           Stacked
         </ButtonGroupItem>
       </ButtonGroup>
+
       <FileDiff
         oldFile={OLD_FILE}
         newFile={NEW_FILE}

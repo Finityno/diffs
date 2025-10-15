@@ -1,7 +1,7 @@
 'use client';
 
 import { FileDiff } from '@/components/diff-ui/FileDiff';
-import { IconFunction, IconType } from '@/components/icons';
+import { IconCheck, IconFunction, IconType } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -13,6 +13,8 @@ import { InputWithIcon } from '@/components/ui/input-group';
 import type { FileContents } from '@pierre/diff-ui';
 import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
+
+import { FeatureHeader } from './FeatureHeader';
 
 const OLD_FILE: FileContents = {
   name: 'file.tsx',
@@ -49,109 +51,122 @@ export default function Home() {
 `,
 };
 
+const fontMap: Record<string, string> = {
+  'Berkeley Mono': '--font-berkeley-mono',
+  'Geist Mono': '--font-geist-mono',
+  'Fira Code': '--font-fira-mono',
+  'IBM Plex Mono': '--font-ibm-plex-mono',
+  'JetBrains Mono': '--font-jetbrains-mono',
+  'Cascadia Code': '--font-cascadia-code',
+};
+
+const fontSizes = ['10px', '12px', '13px', '14px', '18px'];
+const lineHeights = ['16px', '20px', '24px', '28px'];
+
 export function FontStyles() {
-  const [selectedFont, setSelectedFont] = useState('Geist Mono');
+  const [selectedFont, setSelectedFont] = useState('Berkeley Mono');
   const [selectedFontSize, setSelectedFontSize] = useState('14px');
   const [selectedLineHeight, setSelectedLineHeight] = useState('20px');
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="space-y-4">
-        <h3 className="text-2xl font-semibold">Bring your own fonts</h3>
-        <p className="text-sm text-muted-foreground">
-          Precision Diffs is adaptable to any font, font-size, line-height, and
-          even font-feature-settings you may have set. Configure font options
-          with your preferred CSS method globally or on a per-component basis.
-        </p>
-        <div className="flex flex-col md:flex-row gap-3">
-          <div className="flex gap-3">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="justify-start min-w-[140px]"
-                >
-                  <IconType className="h-4 w-4" />
-                  {selectedFont}
-                  <ChevronDown className="h-4 w-4 ml-auto" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start">
-                <DropdownMenuItem onClick={() => setSelectedFont('Geist Mono')}>
-                  Geist Mono
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSelectedFont('SF Mono')}>
-                  SF Mono
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSelectedFont('cursive')}>
-                  Cursive
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSelectedFont('fantasy')}>
-                  Fantasy
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSelectedFont('monospace')}>
-                  Monospace
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+        <FeatureHeader
+          title="Bring your own fonts"
+          description="Precision Diffs is adaptable to any font, font-size, line-height, and even font-feature-settings you may have set. Configure font options with your preferred CSS method globally or on a per-component basis."
+        />
+        <div className="flex flex-col sm:flex-row flex-wrap md:items-center gap-3">
+          <div className="flex flex-wrap gap-3">
+            <div className="p-[2px] rounded-lg bg-secondary flex-1">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="justify-start min-w-[140px] w-full"
+                  >
+                    <IconType className="h-4 w-4" />
+                    {selectedFont}
+                    <ChevronDown className="h-4 w-4 ml-auto" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-40">
+                  {Object.keys(fontMap).map((font) => (
+                    <DropdownMenuItem
+                      key={font}
+                      onClick={() => setSelectedFont(font)}
+                    >
+                      {font}
+                      {selectedFont === font && (
+                        <IconCheck className="ml-auto" />
+                      )}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="min-w-[80px]">
-                  {selectedFontSize}
-                  <ChevronDown className="h-4 w-4 ml-auto" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start">
-                <DropdownMenuItem onClick={() => setSelectedFontSize('10px')}>
-                  10px
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSelectedFontSize('12px')}>
-                  12px
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSelectedFontSize('14px')}>
-                  14px
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSelectedFontSize('18px')}>
-                  18px
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="p-[2px] rounded-lg bg-secondary">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="min-w-[80px]">
+                    {selectedFontSize}
+                    <ChevronDown className="h-4 w-4 ml-auto" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  {fontSizes.map((size) => (
+                    <DropdownMenuItem
+                      key={size}
+                      onClick={() => setSelectedFontSize(size)}
+                    >
+                      {size}
+                      {selectedFontSize === size && (
+                        <IconCheck className="ml-auto" />
+                      )}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="min-w-[80px]">
-                  {selectedLineHeight}
-                  <ChevronDown className="h-4 w-4 ml-auto" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start">
-                <DropdownMenuItem onClick={() => setSelectedLineHeight('16px')}>
-                  16px
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSelectedLineHeight('20px')}>
-                  20px
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSelectedLineHeight('24px')}>
-                  24px
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSelectedLineHeight('28px')}>
-                  28px
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="p-[2px] rounded-lg bg-secondary">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="min-w-[80px]">
+                    {selectedLineHeight}
+                    <ChevronDown className="h-4 w-4 ml-auto" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  {lineHeights.map((height) => (
+                    <DropdownMenuItem
+                      key={height}
+                      onClick={() => setSelectedLineHeight(height)}
+                    >
+                      {height}
+                      {selectedLineHeight === height && (
+                        <IconCheck className="ml-auto" />
+                      )}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
-          <InputWithIcon
-            icon={<IconFunction className="h-4 w-4" />}
-            placeholder="Font feature settings"
-            className="max-w-xs"
-          />
+
+          <div className="p-[2px] rounded-lg bg-secondary">
+            <InputWithIcon
+              icon={<IconFunction className="h-4 w-4" />}
+              placeholder="Font feature settings"
+              className="md:max-w-xs"
+            />
+          </div>
         </div>
       </div>
       <div
         style={
           {
-            '--pjs-font-family': selectedFont,
+            '--pjs-font-family': `var(${fontMap[selectedFont]})`,
             '--pjs-font-size': selectedFontSize,
             '--pjs-line-height': selectedLineHeight,
           } as React.CSSProperties

@@ -1,5 +1,6 @@
 'use client';
 
+import Footer from '@/components/Footer';
 import {
   IconArrowUpRight,
   IconBook,
@@ -22,13 +23,19 @@ import { Annotations } from './diff-examples/Annotations';
 import { ArbitraryFiles } from './diff-examples/ArbitraryFiles';
 import { DiffStyles } from './diff-examples/DiffStyles';
 import { FontStyles } from './diff-examples/FontStyles';
-import { PrebuiltReact } from './diff-examples/PrebuiltReact';
 import { ShikiThemes } from './diff-examples/ShikiThemes';
 import { SplitUnified } from './diff-examples/SplitUnified';
 
 export default function Home() {
   return (
-    <div className="min-h-screen">
+    <div
+      className="min-h-screen max-w-5xl px-5 mx-auto"
+      style={
+        {
+          '--pjs-font-family': `var(--font-berkeley-mono)`,
+        } as React.CSSProperties
+      }
+    >
       <Header
         logo={
           <Header.Logo
@@ -36,7 +43,9 @@ export default function Home() {
             subtitle={
               <>
                 by{' '}
-                <span className="font-medium">The Pierre Computer Company</span>
+                <span className="font-normal uppercase">
+                  The Pierre Computer Company
+                </span>
               </>
             }
           >
@@ -58,9 +67,11 @@ export default function Home() {
 
       <Hero />
 
-      <section className="max-w-4xl mx-auto px-8 py-12 space-y-8">
-        <div className="space-y-4">
-          <h2 className="text-3xl font-bold">
+      <hr className="mt-2 mb-8 w-[120px]" />
+
+      <section className="py-8 space-y-8">
+        <div className="space-y-2">
+          <h2 className="text-2xl font-medium">
             Everything but the kitchen sink
           </h2>
           <p className="text-muted-foreground">
@@ -75,13 +86,13 @@ export default function Home() {
         <ShikiThemes />
         <DiffStyles />
         <FontStyles />
-        <PrebuiltReact />
+        {/* <PrebuiltReact /> */}
         <Annotations />
         <ArbitraryFiles />
       </section>
 
       {/* TODO: add this back once we add the migration APIs
-      
+
       <section className="max-w-4xl mx-auto px-8 py-12 space-y-4">
         <h2 className="text-3xl font-bold">Migrate to Precision Diffs</h2>
         <p className="text-muted-foreground">
@@ -90,19 +101,19 @@ export default function Home() {
         </p>
       </section> */}
 
-      <section className="max-w-4xl mx-auto px-8 py-12 space-y-6">
-        <div className="space-y-4">
-          <h2 className="text-3xl font-bold">
+      <section className="py-16 mt-8 space-y-6 border-y">
+        <div className="space-y-3">
+          <h2 className="text-2xl font-medium">
             With love from The Pierre Computer Company
           </h2>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground max-w-2xl">
             Our team has decades of cumulative experience in open source,
             developer tools, and more. We’ve worked on projects like Coinbase,
             GitHub, Bootstrap, Twitter, Medium, and more. This stuff is our
             bread and butter, and we’d love to share it with you.
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           <Button asChild>
             <Link
               href="https://discord.gg/pierre"
@@ -116,7 +127,7 @@ export default function Home() {
           </Button>
           <Button variant="outline" asChild>
             <Link
-              href="https://github.com/pierreco/"
+              href="https://github.com/pierredotco/"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -128,33 +139,7 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="border-t bg-muted/50">
-        <div className="max-w-4xl mx-auto px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-muted-foreground">Precision Diffs</div>
-            <nav className="flex items-center gap-4">
-              <Link
-                href="/"
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Home
-              </Link>
-              <Link
-                href="/playground"
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Playground
-              </Link>
-              <Link
-                href="/docs"
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Docs
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
@@ -173,11 +158,11 @@ const Hero = () => {
   };
 
   return (
-    <section className="max-w-4xl mx-auto px-8 py-16">
-      <h1 className="text-5xl md:text-6xl font-bold tracking-tight mb-6">
+    <section className="py-16 flex flex-col gap-2 max-w-3xl">
+      <h1 className="text-3xl md:text-4xl font-medium tracking-tight">
         Precision Diffs
       </h1>
-      <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2x">
+      <p className="text-md md:text-lg text-muted-foreground mb-2 max-w-2x">
         Fast, exact diffing for modern apps. Fully open source, built with
         Shiki, insanely customizable, and packed with the features you need.
         Made with love by{' '}
@@ -190,12 +175,12 @@ const Hero = () => {
         .
       </p>
 
-      <div className="flex flex-col sm:flex-row items-center gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
         <Tooltip>
           <TooltipTrigger asChild>
             <button
               onClick={() => void copyToClipboard()}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-white bg-gray-900 dark:bg-gray-100 hover:bg-gray-800 transition-colors font-mono text-sm"
+              className="inline-flex items-center gap-2 px-4 py-3 rounded-md text-white bg-gray-900 hover:bg-gray-800 dark:bg-black dark:border dark:border-white/20 dark:hover:border-white/30 transition-colors font-mono text-sm"
             >
               <span>npm i @pierre/precision-diffs</span>
               {copied ? <IconCheck /> : <IconCopyFill />}
@@ -205,7 +190,7 @@ const Hero = () => {
             <p>{'Copy to clipboard'}</p>
           </TooltipContent>
         </Tooltip>
-        <Button variant="ghost" asChild>
+        <Button variant="secondary" asChild size="xl">
           <Link href="/docs">
             <IconBook />
             Documentation

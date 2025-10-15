@@ -7,6 +7,8 @@ import { CornerDownRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
+import { FeatureHeader } from './FeatureHeader';
+
 const OLD_FILE: FileContents = {
   name: 'file.tsx',
   contents: `import * as 'react';
@@ -45,18 +47,15 @@ export default function Home() {
 export function Annotations() {
   const [element, setElement] = useState<HTMLElement | undefined>(undefined);
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setElement(document.createElement('div'));
   }, []);
 
   return (
-    <div className="space-y-4">
-      <h3 className="text-2xl font-semibold">Comments & Annotations</h3>
-      <p className="text-sm text-muted-foreground">
-        Precision Diffs provides a flexible annotation framework for injecting
-        additional content and context into your diffs. Use it to render line
-        comments, annotations from CI jobs, and other third party content.
-      </p>
+    <div className="space-y-5">
+      <FeatureHeader
+        title="Comments & Annotations"
+        description="Precision Diffs provides a flexible annotation framework for injecting additional content and context into your diffs. Use it to render line comments, annotations from CI jobs, and other third party content."
+      />
       {element != null && (
         <>
           <FileDiff
@@ -82,35 +81,36 @@ export function Annotations() {
 
 const Thread = () => (
   <div
+    className="max-w-[95%] sm:max-w-[70%]"
     style={{
-      maxWidth: '80%',
       whiteSpace: 'normal',
       margin: 20,
-      fontFamily: 'var(--font-body)',
+      fontFamily: 'Geist',
     }}
   >
     <CommentThread
       mainComment={{
         author: 'You',
         timestamp: '3h',
-        content:
-          "What do we think about adding Inter as our primary UI font? It'd definitely help solve some of these layout inconsistencies.",
-        avatarUrl: '/user-avatar.jpg',
+        content: 'Good lord, I refuse to look at diffs ever again after this.',
+        avatarUrl:
+          'https://db.heypierre.app/storage/v1/object/public/avatars/i8UHRtQf_400x400.jpg',
         isYou: true,
       }}
       replies={[
         {
-          author: 'Ian',
+          author: 'Amadeus',
           timestamp: '2h',
-          content: 'Oh yeah, love that.',
-          avatarUrl: '/ian-avatar.jpg',
+          content: 'Wait, how long have we been working on this?',
+          avatarUrl:
+            'https://db.heypierre.app/storage/v1/object/public/avatars/Evzotboe_400x400.jpg',
         },
         {
           author: 'Mark',
           timestamp: '2h',
-          content:
-            'Oh damn, if we can make it work without a perf hit, yeah totally.',
-          avatarUrl: '/mark-avatar.jpg',
+          content: '*checks notes*… it’s not been a short amount of time.',
+          avatarUrl:
+            'https://db.heypierre.app/storage/v1/object/public/avatars/BET9cPgr_400x400.jpg',
         },
       ]}
       onAddReply={() => console.log('Add reply clicked')}
@@ -135,8 +135,8 @@ export function Comment({
   isYou = false,
 }: CommentProps) {
   return (
-    <div className="flex gap-3">
-      <div className="relative flex-shrink-0">
+    <div className="flex gap-2">
+      <div className="relative flex-shrink-0 -mt-0.5">
         <Avatar className="h-6 w-6">
           <AvatarImage src={avatarUrl ?? '/placeholder.svg'} alt={author} />
           <AvatarFallback>{author[0]}</AvatarFallback>
@@ -149,7 +149,7 @@ export function Comment({
           </span>
           <span className="text-sm text-muted-foreground">{timestamp}</span>
         </div>
-        <p className="mt-1 text-foreground leading-relaxed">{content}</p>
+        <p className="text-foreground leading-relaxed">{content}</p>
       </div>
     </div>
   );
@@ -169,28 +169,28 @@ export function CommentThread({
   onResolve,
 }: CommentThreadProps) {
   return (
-    <div className="rounded-lg border bg-card p-6 shadow-sm">
+    <div className="rounded-lg border bg-card p-5 shadow-sm">
       <Comment {...mainComment} />
 
       {replies.length > 0 && (
-        <div className="mt-4 ml-[52px] space-y-4">
+        <div className="mt-4 ml-8 sm:ml-[32px] space-y-4">
           {replies.map((reply, index) => (
             <Comment key={index} {...reply} />
           ))}
         </div>
       )}
 
-      <div className="mt-4 ml-[52px] flex items-center gap-4">
+      <div className="mt-4 ml-8 sm:ml-[32px] flex items-center gap-4">
         <button
           onClick={onAddReply}
-          className="flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
+          className="flex items-center gap-1.5 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
         >
           <CornerDownRight className="h-4 w-4" />
           Add reply...
         </button>
         <button
           onClick={onResolve}
-          className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
+          className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
         >
           Resolve
         </button>
