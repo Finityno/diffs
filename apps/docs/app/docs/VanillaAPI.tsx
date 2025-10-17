@@ -90,9 +90,9 @@ export function VanillaAPI() {
         necessary.
       </p>
       <p>
-        We also provide APIs to preload the highlighter, themes and languages if
-        you would like to do that, along with some cleanup utilities if you want
-        to be memory concious.
+        We provide APIs to preload the highlighter, themes, and languages if you
+        want to have that ready before rendering. Also there are some cleanup
+        utilities if you want to be memory concious.
       </p>
       <p>
         Shiki comes with a lot of built in{' '}
