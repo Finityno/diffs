@@ -1,5 +1,3 @@
-import type { CSSProperties, ReactNode } from 'react';
-
 import {
   DiffHunksRenderer,
   type DiffHunksRendererOptions,
@@ -15,9 +13,10 @@ export type PreloadFileDiffOptions<LAnnotation> = {
   newFile: FileContents;
   options?: DiffHunksRendererOptions;
   annotations?: LineAnnotation<LAnnotation>[];
-  renderAnnotation?(annotations: LineAnnotation<LAnnotation>): ReactNode;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  renderAnnotation?(annotations: LineAnnotation<LAnnotation>): any;
   className?: string;
-  style?: CSSProperties;
+  style?: Record<string, string>;
 };
 
 export type PreloadedFileDiffResult = {
