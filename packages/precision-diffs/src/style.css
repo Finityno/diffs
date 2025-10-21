@@ -311,12 +311,13 @@ code {
   left: 0;
   grid-column: 1 / 3;
   user-select: none;
+  /* We multiply by 1.414 (√2) to better approximate the diagonal repeat distance */
   background-image: repeating-linear-gradient(
     -45deg,
-    var(--pjs-bg-buffer) 0,
-    var(--pjs-bg-buffer) 1px,
-    transparent 1px,
-    transparent 5px
+    transparent,
+    transparent calc(3px * 1.414),
+    var(--pjs-bg-buffer) calc(3px * 1.414),
+    var(--pjs-bg-buffer) calc(4px * 1.414)
   );
   min-height: 1lh;
   width: var(--pjs-column-width, auto);
@@ -346,17 +347,25 @@ code {
   padding: 4px 1ch;
 }
 
+[data-separator='line-info']:not(:first-child) {
+  margin-top: var(--pjs-gap);
+}
+
+[data-separator='line-info']:not(:last-child) {
+  margin-bottom: var(--pjs-gap);
+}
+
 [data-separator='line-info'] [data-separator-content] {
   position: sticky;
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 8px 12px;
+  gap: calc(1ch / 2);
+  padding: calc(1lh / 4) 1ch;
   border-radius: 6px;
   background-color: var(--pjs-bg-separator);
   width: auto;
   width: calc(var(--pjs-column-width) - 8px);
-  opacity: 0.8;
+  opacity: 0.65;
   font-family: var(--pjs-header-font-family, var(--pjs-header-font-fallback));
 }
 
