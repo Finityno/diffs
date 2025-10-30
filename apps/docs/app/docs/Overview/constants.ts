@@ -4,7 +4,7 @@ import type {
 } from '@pierre/precision-diffs/ssr';
 
 const options = {
-  themes: { dark: 'pierre-dark', light: 'pierre-light' },
+  theme: { dark: 'pierre-dark', light: 'pierre-light' },
 } as const;
 
 export const OVERVIEW_INITIAL_EXAMPLE: PreloadFileDiffOptions<undefined> = {
@@ -118,17 +118,17 @@ function Patches() {
       {parsePatchFiles.map((patch, index) => (
         <Fragment key={index}>
           {patch.files.map((fileDiff, index) => (
-            // Under the hood, all instances of FileDiff will use a 
-            // shared Shiki highlighter and manage loading languages 
+            // Under the hood, all instances of FileDiff will use a
+            // shared Shiki highlighter and manage loading languages
             // and themes for you
             <FileDiff
               key={index}
-              // 'fileDiff' is a data structure that includes all 
+              // 'fileDiff' is a data structure that includes all
               // hunks for a specific file from a patch
               fileDiff={fileDiff}
               options={{
                 // Automatically theme based on users OS settings
-                themes: { dark: 'pierre-dark', light: 'pierre-light' },
+                theme: { dark: 'pierre-dark', light: 'pierre-light' },
               }}
             />
           ))}
@@ -211,9 +211,9 @@ for (const patch of parsedPatches) {
     // specific file from a patch
     const instance = new FileDiff({
       // Automatically theme based on users os settings
-      themes: { dark: 'pierre-dark', light: 'pierre-light' },
+      theme: { dark: 'pierre-dark', light: 'pierre-light' },
     });
-    // Under the hood, all instances of FileDiff will use a shared 
+    // Under the hood, all instances of FileDiff will use a shared
     // Shiki highlighter and manage loading languages and themes for
     // you automatically
     instance.render({
