@@ -52,6 +52,7 @@ export interface ParsedPatch {
 }
 
 export interface Hunk {
+  collapsedBefore: number;
   additionCount: number;
   additionStart: number;
   deletedCount: number;
@@ -115,6 +116,9 @@ export interface BaseDiffOptions extends BaseCodeOptions {
   lineDiffType?: LineDifftypes; // 'word-alt' is default
   maxLineDiffLength?: number; // 1000 is default
   maxLineLengthForHighlighting?: number; // 1000 is default
+
+  // How many lines to expand per click
+  expansionLineCount?: number; // 100 is default
 }
 
 export interface RenderHeaderMetadataProps {
@@ -241,3 +245,5 @@ export type AnnotationLineMap<LAnnotation> = Record<
   number,
   DiffLineAnnotation<LAnnotation>[] | undefined
 >;
+
+export type ExpansionDirections = 'up' | 'down' | 'both';
