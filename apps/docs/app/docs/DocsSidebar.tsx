@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import NavLink from '../../components/NavLink';
 
@@ -20,6 +20,7 @@ export function DocsSidebar({
   isMobileOpen = false,
   onMobileClose,
 }: DocsSidebarProps) {
+  const navRef = useRef<HTMLElement>(null);
   const [headings, setHeadings] = useState<HeadingItem[]>([]);
   const [activeHeading, setActiveHeading] = useState<string>('');
 
@@ -31,11 +32,6 @@ export function DocsSidebar({
 
     for (const element of headingElements) {
       if (!(element instanceof HTMLElement)) {
-        continue;
-      }
-
-      // Skip headings marked to be ignored in TOC
-      if ('tocIgnore' in element.dataset) {
         continue;
       }
 
@@ -99,6 +95,28 @@ export function DocsSidebar({
     return undefined;
   }, [headings]);
 
+  // Scroll active nav link into view within the sidebar
+  useEffect(() => {
+    const nav = navRef.current;
+    if (activeHeading === '' || nav == null) {
+      return;
+    }
+
+    const activeLink = nav.querySelector(
+      `a[href="#${CSS.escape(activeHeading)}"]`
+    );
+
+    if (activeLink instanceof HTMLElement) {
+      // Calculate position to center the link within the sidebar
+      const linkTop = activeLink.offsetTop;
+      const linkHeight = activeLink.offsetHeight;
+      const navHeight = nav.clientHeight;
+      const scrollTarget = linkTop - navHeight / 2 + linkHeight / 2;
+
+      nav.scrollTo({ top: scrollTarget, behavior: 'smooth' });
+    }
+  }, [activeHeading]);
+
   return (
     <>
       {isMobileOpen && (
@@ -109,6 +127,7 @@ export function DocsSidebar({
       )}
 
       <nav
+        ref={navRef}
         className={`docs-sidebar ${isMobileOpen ? 'is-open' : ''}`}
         onClick={onMobileClose}
       >
