@@ -1,3 +1,8 @@
+import {
+  codeToHtml,
+  createCssVariablesTheme as createCSSVariablesTheme,
+} from 'shiki';
+
 export * from './components/File';
 export * from './components/FileDiff';
 export * from './components/FileStream';
@@ -19,6 +24,7 @@ export * from './highlighter/themes/constants';
 export * from './highlighter/themes/getResolvedOrResolveTheme';
 export * from './highlighter/themes/getResolvedThemes';
 export * from './highlighter/themes/hasResolvedThemes';
+export * from './highlighter/themes/registerCustomCSSVariableTheme';
 export * from './highlighter/themes/registerCustomTheme';
 export * from './highlighter/themes/resolveTheme';
 export * from './highlighter/themes/resolveThemes';
@@ -79,4 +85,4 @@ export * from './utils/setLanguageOverride';
 export * from './utils/setWrapperNodeProps';
 export type * from './types';
 
-export { codeToHtml } from 'shiki';
+export { codeToHtml, createCSSVariablesTheme };
