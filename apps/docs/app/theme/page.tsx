@@ -1,17 +1,33 @@
+import '@/app/prose.css';
 import Footer from '@/components/Footer';
-import { Header } from '@/components/Header';
 import { PierreCompanySection } from '@/components/PierreCompanySection';
 import {
   IconArrowUpRight,
   IconBrandCursor,
   IconBrandVsCode,
   IconBrandZed,
+  IconThemes,
 } from '@/components/icons';
 import { Button } from '@/components/ui/button';
+import { renderMDX } from '@/lib/mdx';
+import { preloadFile } from '@pierre/diffs/ssr';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import { ThemeScreenshots } from './ThemeScreenshots';
+import { HeadingAnchors } from '../docs/HeadingAnchors';
+import { ProseWrapper } from '../docs/ProseWrapper';
+import {
+  THEMING_PACKAGE_JSON_EXAMPLE,
+  THEMING_PALETTE_COLORS,
+  THEMING_PALETTE_LIGHT,
+  THEMING_PALETTE_ROLES,
+  THEMING_PROJECT_STRUCTURE,
+  THEMING_REGISTER_THEME,
+  THEMING_TOKEN_COLORS_EXAMPLE,
+  THEMING_USE_IN_COMPONENT,
+} from '../docs/Theming/constants';
+import { ThemeDemo } from './ThemeDemo';
+import { ThemeLayout } from './ThemeLayout';
 
 export const metadata: Metadata = {
   title: 'Pierre Themes — Themes for Visual Studio Code, Cursor, and Shiki.',
@@ -30,21 +46,67 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ThemePage() {
-  return (
-    <div className="mx-auto min-h-screen max-w-5xl px-5 xl:max-w-[80rem]">
-      <Header className="-mb-[1px]" />
+export default async function ThemePage() {
+  const [
+    projectStructurePreload,
+    paletteColorsPreload,
+    paletteRolesPreload,
+    paletteLightPreload,
+    tokenColorsExamplePreload,
+    packageJsonExamplePreload,
+    registerThemePreload,
+    useInComponentPreload,
+  ] = await Promise.all([
+    preloadFile(THEMING_PROJECT_STRUCTURE),
+    preloadFile(THEMING_PALETTE_COLORS),
+    preloadFile(THEMING_PALETTE_ROLES),
+    preloadFile(THEMING_PALETTE_LIGHT),
+    preloadFile(THEMING_TOKEN_COLORS_EXAMPLE),
+    preloadFile(THEMING_PACKAGE_JSON_EXAMPLE),
+    preloadFile(THEMING_REGISTER_THEME),
+    preloadFile(THEMING_USE_IN_COMPONENT),
+  ]);
 
+  // Merge href from constants into preloaded results
+  const projectStructure = { ...projectStructurePreload };
+  const paletteColors = {
+    ...paletteColorsPreload,
+    href: THEMING_PALETTE_COLORS.href,
+  };
+  const paletteRoles = {
+    ...paletteRolesPreload,
+    href: THEMING_PALETTE_ROLES.href,
+  };
+  const paletteLight = {
+    ...paletteLightPreload,
+    href: THEMING_PALETTE_LIGHT.href,
+  };
+  const tokenColorsExample = {
+    ...tokenColorsExamplePreload,
+    href: THEMING_TOKEN_COLORS_EXAMPLE.href,
+  };
+  const packageJsonExample = { ...packageJsonExamplePreload };
+  const registerTheme = { ...registerThemePreload };
+  const useInComponent = { ...useInComponentPreload };
+
+  const content = await renderMDX({
+    filePath: 'docs/Theming/content.mdx',
+    scope: {
+      projectStructure,
+      paletteColors,
+      paletteRoles,
+      paletteLight,
+      tokenColorsExample,
+      packageJsonExample,
+      registerTheme,
+      useInComponent,
+    },
+  });
+
+  const headerContent = (
+    <>
       <section className="flex max-w-3xl flex-col gap-3 py-20 lg:max-w-4xl">
-        <div className="mb-2 flex gap-2">
-          <div className="size-4 rounded-full bg-[#fc2b73] dark:bg-[#ff678d]" />
-          <div className="size-4 w-8 rounded-full bg-[#0dbe4e] dark:bg-[#5ecc71]" />
-          <div className="size-4 w-12 rounded-full bg-[#00cab1] dark:bg-[#61d5c0]" />
-          <div className="size-4 w-20 rounded-full bg-[#7b43f8] dark:bg-[#9d6afb]" />
-          <div className="size-4 w-8 rounded-full bg-[#fe8c2c] dark:bg-[#ffa359]" />
-          <div className="size-4 w-6 rounded-full bg-[#009fff] dark:bg-[#69b1ff]" />
-        </div>
-
+        <IconThemes className="mb-2 size-8" />
         <h1 className="text-4xl font-semibold tracking-tight md:text-5xl lg:text-6xl">
           Pierre themes
         </h1>
@@ -69,7 +131,7 @@ export default function ThemePage() {
           .
         </p>
 
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           <Button asChild>
             <Link
               href="https://marketplace.visualstudio.com/items?itemName=pierrecomputer.pierre-theme"
@@ -95,54 +157,28 @@ export default function ThemePage() {
           <Button variant="outline" disabled className="opacity-50">
             <IconBrandZed />
             Zed
-            <span className="text-muted-foreground text-xs">(Soon)</span>
+            <span className="text-muted-foreground">(Soon)</span>
           </Button>
         </div>
       </section>
 
-      <section className="py-6">
-        <ThemeScreenshots />
+      <section className="pb-6">
+        <ThemeDemo />
       </section>
+    </>
+  );
 
-      <section className="space-y-4 py-6">
-        <h2 className="text-2xl font-medium">Usage</h2>
+  return (
+    <div className="mx-auto min-h-screen max-w-5xl px-5 xl:max-w-[80rem]">
+      <ThemeLayout header={headerContent}>
+        <div className="min-w-0 space-y-8">
+          <HeadingAnchors />
 
-        <ol className="list-inside list-decimal space-y-2">
-          <li>
-            Install the Pierre theme pack from your editor’s extension
-            marketplace.
-            <ul className="mt-2 list-['—'] space-y-2 pl-8">
-              <li className="pl-[1.25ch]">
-                <Link
-                  href="https://marketplace.visualstudio.com/items?itemName=pierrecomputer.pierre-theme"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-foreground muted-foreground hover:decoration-foreground underline decoration-[1px] underline-offset-4 transition-colors"
-                >
-                  Visual Studio Code
-                </Link>
-              </li>
-              <li className="pl-[1.25ch]">
-                <Link
-                  href="https://open-vsx.org/extension/pierrecomputer/pierre-theme"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-foreground muted-foreground hover:decoration-foreground underline decoration-[1px] underline-offset-4 transition-colors"
-                >
-                  Cursor
-                </Link>
-              </li>
-              <li className="pl-[1.25ch] opacity-50">Zed (coming soon)</li>
-            </ul>
-          </li>
-          <li>
-            Open your editor and select the Pierre themes in settings or the
-            command palette.
-          </li>
-        </ol>
-      </section>
+          <ProseWrapper>{content}</ProseWrapper>
 
-      <PierreCompanySection />
+          <PierreCompanySection />
+        </div>
+      </ThemeLayout>
 
       <Footer />
     </div>
